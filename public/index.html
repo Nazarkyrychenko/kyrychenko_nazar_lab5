@@ -3,37 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
     <title>Book API</title>
-    <style>
-      body {
-        font: 14 sans-serif;
-        margin: 0;
-      }
-      nav {
-        background: #333;
-        padding: 8px;
-      }
-      nav a {
-        color: #fff;
-        margin-right: 12px;
-        text-decoration: none;
-      }
-      #out {
-        padding: 16px;
-      }
-      pre {
-        background: #f4f4f4;
-        padding: 8px;
-        overflow: auto;
-      }
-      label {
-        display: block;
-        margin: 8px 0;
-      }
-      input {
-        width: 200px;
-      }
-    </style>
   </head>
   <body>
     <nav>
@@ -42,10 +13,12 @@
       <a href="#" data-act="genre">By Genre</a>
       <a href="#" data-act="user">Get User Data</a>
     </nav>
+
     <div id="out">
       <h2>Book API Interface</h2>
       <p>Select an action above.</p>
     </div>
+
     <script>
       var out = document.getElementById("out");
       var cfg = {
@@ -57,9 +30,7 @@
 
       document.querySelector("nav").onclick = function (e) {
         var act = e.target.getAttribute("data-act");
-        if (!cfg[act]) {
-          return;
-        }
+        if (!cfg[act]) return;
         e.preventDefault();
         run(act);
       };
@@ -69,13 +40,9 @@
         var conf = cfg[key];
         if (!conf.fields) {
           fetch(conf.url, { method: conf.method })
-            .then(function (res) {
-              return res.json();
-            })
+            .then((res) => res.json())
             .then(show)
-            .catch(function (err) {
-              out.textContent = err;
-            });
+            .catch((err) => (out.textContent = err));
           return;
         }
 
@@ -90,21 +57,49 @@
           e.preventDefault();
           var val = form.elements[conf.fields[0]].value;
           fetch(conf.url + encodeURIComponent(val), { method: conf.method })
-            .then(function (res) {
-              return res.json();
-            })
+            .then((res) => res.json())
             .then(show)
-            .catch(function (err) {
-              out.textContent = err;
-            });
+            .catch((err) => (out.textContent = err));
         };
         out.appendChild(form);
       }
 
       function show(data) {
-        var pre = document.createElement("pre");
-        pre.textContent = JSON.stringify(data, null, 2);
-        out.appendChild(pre);
+        out.innerHTML = "";
+        if (Array.isArray(data)) {
+          var container = document.createElement("div");
+          container.className = "book-container";
+          data.forEach(function (book) {
+            var card = document.createElement("div");
+            card.className = "book-card";
+            card.innerHTML = `
+              <h3>${book.title}</h3>
+              <p><strong>Автор:</strong> ${book.author}</p>
+              <p><strong>Рік:</strong> ${book.year}</p>
+              <p><strong>Жанр:</strong> ${book.genre}</p>
+            `;
+            container.appendChild(card);
+          });
+          out.appendChild(container);
+        } else if (typeof data === "object") {
+          var card = document.createElement("div");
+          card.className = "book-card";
+          card.innerHTML = `
+            <h3>${data.title || data.login || "Дані"}</h3>
+            <p><strong>Автор:</strong> ${
+              data.author || data.firstname || ""
+            }</p>
+            <p><strong>Рік:</strong> ${data.year || data.course || ""}</p>
+            <p><strong>Жанр/Група:</strong> ${
+              data.genre || data.group || ""
+            }</p>
+          `;
+          out.appendChild(card);
+        } else {
+          var pre = document.createElement("pre");
+          pre.textContent = JSON.stringify(data, null, 2);
+          out.appendChild(pre);
+        }
       }
     </script>
   </body>
