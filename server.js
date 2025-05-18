@@ -14,6 +14,7 @@ let books = [
 	{ id: 3, title: 'The Midnight Library', author: 'Matt Haig', year: 2020, genre: 'Fantasy' },
 	{ id: 4, title: 'Verity', author: 'Colleen Hoover', year: 2018, genre: 'Thriller' },
 	{ id: 5, title: 'Darkly Dreaming Dexter', author: 'Jeff Lindsay', year: 2004, genre: 'Crime Thriller' },
+	{ id: 6, title: 'Dune', author: 'Frenk Herbert', year: 1965, genre: 'Fantasy' }
 ];
 
 app.get('/', function (req, res) {
