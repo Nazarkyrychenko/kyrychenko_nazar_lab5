@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Book API</title>
+    <style>
+      body {
+        font: 14 sans-serif;
+        margin: 0;
+      }
+      nav {
+        background: #333;
+        padding: 8px;
+      }
+      nav a {
+        color: #fff;
+        margin-right: 12px;
+        text-decoration: none;
+      }
+      #out {
+        padding: 16px;
+      }
+      pre {
+        background: #f4f4f4;
+        padding: 8px;
+        overflow: auto;
+      }
+      label {
+        display: block;
+        margin: 8px 0;
+      }
+      input {
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="#" data-act="list">List Books</a>
+      <a href="#" data-act="get">Get Book by ID</a>
+      <a href="#" data-act="genre">By Genre</a>
+      <a href="#" data-act="user">Get User Data</a>
+    </nav>
+    <div id="out">
+      <h2>Book API Interface</h2>
+      <p>Select an action above.</p>
+    </div>
+    <script>
+      var out = document.getElementById("out");
+      var cfg = {
+        list: { method: "GET", url: "/books" },
+        get: { method: "GET", url: "/books/", fields: ["id"] },
+        genre: { method: "GET", url: "/books/genre/", fields: ["genre"] },
+        user: { method: "GET", url: "/userdata/", fields: ["login"] },
+      };
+
+      document.querySelector("nav").onclick = function (e) {
+        var act = e.target.getAttribute("data-act");
+        if (!cfg[act]) {
+          return;
+        }
+        e.preventDefault();
+        run(act);
+      };
+
+      function run(key) {
+        out.innerHTML = "";
+        var conf = cfg[key];
+        if (!conf.fields) {
+          fetch(conf.url, { method: conf.method })
+            .then(function (res) {
+              return res.json();
+            })
+            .then(show)
+            .catch(function (err) {
+              out.textContent = err;
+            });
+          return;
+        }
+
+        var form = document.createElement("form");
+        conf.fields.forEach(function (f) {
+          form.innerHTML +=
+            "<label>" + f + ':<input name="' + f + '" required></label>';
+        });
+
+        form.innerHTML += "<button>Go</button>";
+        form.onsubmit = function (e) {
+          e.preventDefault();
+          var val = form.elements[conf.fields[0]].value;
+          fetch(conf.url + encodeURIComponent(val), { method: conf.method })
+            .then(function (res) {
+              return res.json();
+            })
+            .then(show)
+            .catch(function (err) {
+              out.textContent = err;
+            });
+        };
+        out.appendChild(form);
+      }
+
+      function show(data) {
+        var pre = document.createElement("pre");
+        pre.textContent = JSON.stringify(data, null, 2);
+        out.appendChild(pre);
+      }
+    </script>
+  </body>
+</html>

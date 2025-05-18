@@ -1,0 +1,23 @@
+{
+  "name": "kyrychenko_nazar_lab5",
+  "version": "1.0.0",
+  "description": "1. GET /books - повертає всі книги\r    Повертає:\r    [\r    {\r    \"id\": число,\r    \"title\": \"рядок\",\r    \"author\": \"рядок\",\r    \"year\": число,\r    \"genre\": \"рядок\"\r    },\r    {\r    \"id\": число,\r    \"title\": \"рядок\",\r    \"author\": \"рядок\",\r    \"year\": число,\r    \"genre\": \"рядок\"\r    ...\r    }",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nazarkyrychenko/kyrychenko_nazar_lab5.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nazarkyrychenko/kyrychenko_nazar_lab5/issues"
+  },
+  "homepage": "https://github.com/Nazarkyrychenko/kyrychenko_nazar_lab5#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
