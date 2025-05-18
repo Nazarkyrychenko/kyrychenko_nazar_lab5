@@ -65,35 +65,47 @@
       }
 
       function show(data) {
-        out.innerHTML = "";
+        out.innerHTML = ""; // очищення перед показом
         if (Array.isArray(data)) {
           var container = document.createElement("div");
           container.className = "book-container";
           data.forEach(function (book) {
             var card = document.createElement("div");
             card.className = "book-card";
-            card.innerHTML = `
-              <h3>${book.title}</h3>
-              <p><strong>Автор:</strong> ${book.author}</p>
-              <p><strong>Рік:</strong> ${book.year}</p>
-              <p><strong>Жанр:</strong> ${book.genre}</p>
-            `;
+            card.innerHTML =
+              "<h3>" +
+              book.title +
+              "</h3>" +
+              "<p><strong>Автор:</strong> " +
+              book.author +
+              "</p>" +
+              "<p><strong>Рік:</strong> " +
+              book.year +
+              "</p>" +
+              "<p><strong>Жанр:</strong> " +
+              book.genre +
+              "</p>";
             container.appendChild(card);
           });
           out.appendChild(container);
         } else if (typeof data === "object") {
           var card = document.createElement("div");
           card.className = "book-card";
-          card.innerHTML = `
-            <h3>${data.title || data.login || "Дані"}</h3>
-            <p><strong>Автор:</strong> ${
-              data.author || data.firstname || ""
-            }</p>
-            <p><strong>Рік:</strong> ${data.year || data.course || ""}</p>
-            <p><strong>Жанр/Група:</strong> ${
-              data.genre || data.group || ""
-            }</p>
-          `;
+          if (data.login) {
+            card.innerHTML = `
+        <h3>${data.login}</h3>
+        <p><strong>Ім'я:</strong> ${data.firstname || ""}</p>
+        <p><strong>Рік:</strong> ${data.course || ""}</p>
+        <p><strong>Група:</strong> ${data.group || ""}</p>
+      `;
+          } else {
+            card.innerHTML = `
+        <h3>${data.title || "Дані"}</h3>
+        <p><strong>Автор:</strong> ${data.author || ""}</p>
+        <p><strong>Рік:</strong> ${data.year || ""}</p>
+        <p><strong>Жанр:</strong> ${data.genre || ""}</p>
+      `;
+          }
           out.appendChild(card);
         } else {
           var pre = document.createElement("pre");
